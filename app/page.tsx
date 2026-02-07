@@ -19,6 +19,29 @@ interface PendingMessage {
   timestamp: string;
 }
 
+const WORLDS = [
+  {
+    icon: "🗡️",
+    title: "무림",
+    desc: "강호의 세계, 무공과 협객의 이야기",
+  },
+  {
+    icon: "🚀",
+    title: "갤럭틱 오디세이",
+    desc: "은하 제국과 자유연합의 전쟁",
+  },
+  {
+    icon: "🪄",
+    title: "아케인 아칸",
+    desc: "마법 학교와 금지된 마법의 비밀",
+  },
+  {
+    icon: "💍",
+    title: "고대 반지의 연대기",
+    desc: "종족 연합과 어둠의 군주",
+  }
+];
+
 export default function Home() {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [status, setStatus] = useState<ConversationResponse["status"]>("idle");
@@ -175,40 +198,56 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col bg-background">
-      {/* Header - minimal like Maru */}
-      <header className="flex items-center justify-between border-b border-border px-4 h-[52px]">
+      {/* Header - RPG Style */}
+      <header className="flex items-center justify-center border-b border-border/40 bg-background/80 backdrop-blur-md px-4 h-[60px] sticky top-0 z-10">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm font-medium">⚔️ AI RPG</span>
+          <span className="font-mono text-xl font-bold text-primary rpg-title-glow">⚔️ AI RPG</span>
         </div>
-        {!showWorkspace && (
-          <button
-            onClick={() => setShowWorkspace(true)}
-            className="p-1.5 hover:bg-muted rounded transition-colors"
-            title="Open workspace"
-          >
-            <PanelRight className="size-4 text-muted-foreground" />
-          </button>
-        )}
       </header>
 
       {/* Main content */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         {/* Chat panel */}
         <ResizablePanel defaultSize={showWorkspace ? 55 : 100} minSize={40}>
-          <div className="flex h-full flex-col">
+          <div className="flex h-full flex-col relative">
             {/* Messages area */}
             <div className="flex-1 overflow-auto">
               {!hasMessages ? (
-                <div className="flex h-full flex-col items-center justify-center px-4">
-                  <h1 className="font-mono text-lg mb-6">
-                    ⚔️ 모험을 시작하세요
-                  </h1>
-                  <div className="w-full max-w-xl">
+                <div className="flex min-h-full flex-col items-center justify-center px-4 py-10 animate-fade-in-up">
+                  <div className="text-center mb-12 space-y-4">
+                    <h1 className="font-mono text-5xl md:text-6xl font-bold text-primary rpg-title-glow mb-2">
+                      AI 텍스트 RPG
+                    </h1>
+                    <p className="text-xl text-muted-foreground delay-100 animate-fade-in-up">
+                      당신만의 모험이 시작됩니다
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl mb-12 delay-200 animate-fade-in-up">
+                    {WORLDS.map((world) => (
+                      <button
+                        key={world.title}
+                        onClick={() => handleSubmit(world.title)}
+                        className="rpg-card text-left group"
+                        disabled={isLoading}
+                      >
+                        <div className="flex items-start gap-4">
+                          <span className="text-4xl group-hover:scale-110 transition-transform duration-300">{world.icon}</span>
+                          <div>
+                            <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{world.title}</h3>
+                            <p className="text-sm text-muted-foreground mt-1">{world.desc}</p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="w-full max-w-xl delay-300 animate-fade-in-up">
                     <PromptForm
                       onSubmit={handleSubmit}
                       isLoading={isLoading}
                       disabled={status === "running"}
-                      placeholder="아무 말이나 입력하면 게임이 시작됩니다..."
+                      placeholder="또는 직접 입력하여 모험을 시작하세요..."
                     />
                   </div>
                 </div>
@@ -220,23 +259,25 @@ export default function Home() {
               )}
             </div>
 
-            {/* Error display */}
+            {/* Error display - RPG Themed */}
             {errorMessage && (
-              <div className="mx-4 mb-2 rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {errorMessage}
+              <div className="mx-4 mb-2 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive shadow-lg animate-fade-in-up">
+                <span className="mr-2">⚠️</span>
+                서버와의 연결이 불안정합니다. 잠시 후 다시 시도해주세요.
               </div>
             )}
 
-            {/* Status indicator */}
+            {/* Status indicator - RPG Themed */}
             {status === "running" && hasMessages && (
-              <div className="mx-4 mb-2 text-sm text-muted-foreground">
-                <span className="animate-pulse">Processing...</span>
+              <div className="mx-4 mb-2 text-sm text-primary/80 font-mono flex items-center justify-center">
+                <span className="animate-pulse mr-2">🔮</span>
+                <span className="shimmer">게임 마스터가 이야기를 준비하고 있습니다...</span>
               </div>
             )}
 
             {/* Bottom prompt form (only when there are messages) */}
             {hasMessages && (
-              <div className="border-t border-border p-4">
+              <div className="border-t border-border/40 bg-background/80 backdrop-blur-sm p-4">
                 <div className="max-w-3xl mx-auto">
                   <PromptForm
                     onSubmit={handleSubmit}
@@ -252,7 +293,7 @@ export default function Home() {
 
         {showWorkspace && (
           <>
-            <ResizableHandle />
+            <ResizableHandle className="bg-border/40" />
             <ResizablePanel defaultSize={45} minSize={25}>
               <WorkspacePanel
                 conversationId={conversationId}
