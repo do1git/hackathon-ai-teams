@@ -81,9 +81,13 @@ All character data MUST be saved to and loaded from `/workspace/data/character.j
 
 ### 4. Status Block
 
-Display this block at the beginning of every response:
+Do NOT display stats visually in your response text. Instead, embed the following HTML comment at the very beginning of every response (the UI will parse it automatically):
 
 ```
+<!-- STATS:name=NAME|level=LEVEL|class=CLASS|world=WORLD|hp=HP|maxHp=MAXHP|mp=MP|maxMp=MAXMP|attack=ATK|defense=DEF|gold=GOLD|xp=XP|xpToNext=XPNEXT|inventory=ITEM1,ITEM2|turnCount=TURN|runCount=RUN -->
+```
+
+Example: `<!-- STATS:name=소운검|level=1|class=검객|world=무림|hp=100|maxHp=100|mp=50|maxMp=50|attack=10|defense=5|gold=50|xp=0|xpToNext=100|inventory=단검|turnCount=1|runCount=1 -->`
 ---
 📊 [NAME] | Lv.[LEVEL] [CLASS] | 🌍 [WORLD]
 ❤️ HP: [HP]/[MAXHP] | 💧 MP: [MP]/[MAXMP]

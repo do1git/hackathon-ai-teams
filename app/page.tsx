@@ -111,39 +111,71 @@ export default function Home() {
         : Array.isArray(m.message.content)
           ? m.message.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("\n")
           : "";
-      if (!text.includes("📊")) continue;
 
-      const nameMatch = text.match(/📊\s*(.+?)\s*\|\s*Lv\.(\d+)\s+(.+?)\s*\|\s*🌍\s*(.+)/);
-      const hpMatch = text.match(/❤️\s*HP:\s*(\d+)\/(\d+)/);
-      const mpMatch = text.match(/💧\s*MP:\s*(\d+)\/(\d+)/);
-      const atkMatch = text.match(/⚔️\s*ATK:\s*(\d+)/);
-      const defMatch = text.match(/🛡️\s*DEF:\s*(\d+)/);
-      const goldMatch = text.match(/💰\s*(?:GOLD:\s*)?(\d+)/);
-      const xpMatch = text.match(/✨\s*XP:\s*(\d+)\/(\d+)/);
-      const invMatch = text.match(/🎒\s*INV:\s*\[?([^\]\n]*)\]?/);
-      const turnMatch = text.match(/🔄\s*TURN:\s*(\d+)/);
-      const runMatch = text.match(/💀\s*RUN:\s*(\d+)/);
+      const statsMatch = text.match(/<!--\s*STATS:(.+?)\s*-->/);
+      if (statsMatch) {
+        const pairs = statsMatch[1].split('|');
+        const data: Record<string, string> = {};
+        for (const pair of pairs) {
+          const eqIdx = pair.indexOf('=');
+          if (eqIdx > 0) data[pair.slice(0, eqIdx)] = pair.slice(eqIdx + 1);
+        }
+        if (data.name && data.hp) {
+          setCharacterStats({
+            name: data.name,
+            level: parseInt(data.level) || 1,
+            class: data.class || '',
+            world: data.world || '',
+            hp: parseInt(data.hp) || 0,
+            maxHp: parseInt(data.maxHp) || 100,
+            mp: parseInt(data.mp) || 0,
+            maxMp: parseInt(data.maxMp) || 50,
+            attack: parseInt(data.attack) || 10,
+            defense: parseInt(data.defense) || 5,
+            gold: parseInt(data.gold) || 0,
+            xp: parseInt(data.xp) || 0,
+            xpToNext: parseInt(data.xpToNext) || 100,
+            inventory: data.inventory ? data.inventory.split(',').filter(Boolean) : [],
+            turnCount: parseInt(data.turnCount) || 0,
+            runCount: parseInt(data.runCount) || 1,
+          });
+          return;
+        }
+      }
 
-      if (nameMatch && hpMatch) {
-        setCharacterStats({
-          name: nameMatch[1].trim(),
-          level: parseInt(nameMatch[2]),
-          class: nameMatch[3].trim(),
-          world: nameMatch[4].trim(),
-          hp: parseInt(hpMatch[1]),
-          maxHp: parseInt(hpMatch[2]),
-          mp: mpMatch ? parseInt(mpMatch[1]) : 0,
-          maxMp: mpMatch ? parseInt(mpMatch[2]) : 50,
-          attack: atkMatch ? parseInt(atkMatch[1]) : 10,
-          defense: defMatch ? parseInt(defMatch[1]) : 5,
-          gold: goldMatch ? parseInt(goldMatch[1]) : 0,
-          xp: xpMatch ? parseInt(xpMatch[1]) : 0,
-          xpToNext: xpMatch ? parseInt(xpMatch[2]) : 100,
-          inventory: invMatch ? invMatch[1].split(',').map((s: string) => s.trim()).filter(Boolean) : [],
-          turnCount: turnMatch ? parseInt(turnMatch[1]) : 0,
-          runCount: runMatch ? parseInt(runMatch[1]) : 1,
-        });
-        return;
+      // Fallback: parse emoji-based status block (legacy format)
+      if (text.includes("📊")) {
+        const nameMatch = text.match(/📊\s*(.+?)\s*\|\s*Lv\.(\d+)\s+(.+?)\s*\|\s*🌍\s*(.+)/);
+        const hpMatch = text.match(/❤️\s*HP:\s*(\d+)\/(\d+)/);
+        if (nameMatch && hpMatch) {
+          const mpMatch = text.match(/💧\s*MP:\s*(\d+)\/(\d+)/);
+          const atkMatch = text.match(/⚔️\s*ATK:\s*(\d+)/);
+          const defMatch = text.match(/🛡️\s*DEF:\s*(\d+)/);
+          const goldMatch = text.match(/💰\s*(?:GOLD:\s*)?(\d+)/);
+          const xpMatch = text.match(/✨\s*XP:\s*(\d+)\/(\d+)/);
+          const invMatch = text.match(/🎒\s*INV:\s*\[?([^\]\n]*)\]?/);
+          const turnMatch = text.match(/🔄\s*TURN:\s*(\d+)/);
+          const runMatch = text.match(/💀\s*RUN:\s*(\d+)/);
+          setCharacterStats({
+            name: nameMatch[1].trim(),
+            level: parseInt(nameMatch[2]),
+            class: nameMatch[3].trim(),
+            world: nameMatch[4].trim(),
+            hp: parseInt(hpMatch[1]),
+            maxHp: parseInt(hpMatch[2]),
+            mp: mpMatch ? parseInt(mpMatch[1]) : 0,
+            maxMp: mpMatch ? parseInt(mpMatch[2]) : 50,
+            attack: atkMatch ? parseInt(atkMatch[1]) : 10,
+            defense: defMatch ? parseInt(defMatch[1]) : 5,
+            gold: goldMatch ? parseInt(goldMatch[1]) : 0,
+            xp: xpMatch ? parseInt(xpMatch[1]) : 0,
+            xpToNext: xpMatch ? parseInt(xpMatch[2]) : 100,
+            inventory: invMatch ? invMatch[1].split(',').map((s: string) => s.trim()).filter(Boolean) : [],
+            turnCount: turnMatch ? parseInt(turnMatch[1]) : 0,
+            runCount: runMatch ? parseInt(runMatch[1]) : 1,
+          });
+          return;
+        }
       }
     }
   }, []);
