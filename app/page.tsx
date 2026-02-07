@@ -183,16 +183,16 @@ export default function Home() {
 
     // Check if a pending message has a matching user message in server data.
     // Used to remove pending messages once the server confirms them.
-    const hasPendingMatch = useCallback(
-        (pending: PendingMessage, serverMsgs: SessionEntry[]) => {
-            return serverMsgs.some(
-                (m) =>
-                    m.type === "user" &&
-                    getUserMessageText(m.message.content) === pending.content
-            );
-        },
-        [getUserMessageText]
-    );
+  const hasPendingMatch = useCallback(
+    (pending: PendingMessage, serverMsgs: SessionEntry[]) => {
+      return serverMsgs.some(
+        (m) =>
+          m.type === "user" &&
+          getUserMessageText(m.message.content).includes(pending.content)
+      );
+    },
+    [getUserMessageText]
+  );
 
     // Polling for conversation updates
     // Keeps polling while "running", and also after "completed"/"error" if
