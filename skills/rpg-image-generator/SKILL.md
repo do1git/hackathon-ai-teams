@@ -17,7 +17,7 @@ Generate an image at **impactful narrative moments** — not every turn.
 - **Discovery**: Finding a legendary item, hidden passage, or ancient artifact
 - **Major story beat**: Betrayal, revelation, dramatic escape
 
-**Frequency**: Maximum 1 image per turn. Aim for roughly 1 image every 3-4 turns.
+**Frequency**: Generate **exactly 1 image per turn**. Every response must include a scene illustration.
 
 ## How to Generate
 
@@ -30,6 +30,7 @@ Fantasy RPG illustration, [WORLD_STYLE], [SCENE_DESCRIPTION], [MOOD/LIGHTING], d
 ```
 
 **World style keywords**:
+
 - 무림 → `wuxia, East Asian martial arts, ink painting aesthetic, bamboo forests, ancient temples`
 - 갤럭틱 오디세이 → `sci-fi space opera, starships, neon lights, alien planets, futuristic architecture`
 - 아케인 아칸 → `arcane academy, magical runes, mystical creatures, glowing spells, gothic fantasy school`
@@ -49,13 +50,26 @@ Body: { "prompt": "<your crafted prompt>" }
 Where `${CALLBACK_URL_BASE}` is the base URL derived from `CALLBACK_URL` environment variable (strip the `/api/conversations/...` path suffix — use everything before `/api/`).
 
 The response JSON contains:
+
+```json
+{ "imageUrl": "https://...", "mimeType": "image/png" }
+```
+
+If Supabase Storage is not configured, it falls back to:
+
 ```json
 { "imageBase64": "<base64 data>", "mimeType": "image/png" }
 ```
 
 ### Step 3: Embed in response
 
-Insert the image as a markdown data URI in your narrative text:
+Insert the image as markdown in your narrative text:
+
+```markdown
+![Brief scene description](<imageUrl value>)
+```
+
+If the response contains `imageBase64` instead of `imageUrl`, use a data URI:
 
 ```markdown
 ![Brief scene description](data:image/png;base64,<imageBase64 value>)

@@ -1,5 +1,21 @@
 import { GoogleGenAI } from "@google/genai";
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+
+const BUCKET_NAME = "rpg-images";
+
+function getSupabaseClient() {
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) return null;
+    return createClient(url, key);
+}
+
+function mimeToExt(mime: string): string {
+    if (mime.includes("jpeg") || mime.includes("jpg")) return "jpg";
+    if (mime.includes("webp")) return "webp";
+    return "png";
+}
 
 export async function POST(request: NextRequest) {
     const apiKey = process.env.GOOGLE_API_KEY;
@@ -47,12 +63,44 @@ export async function POST(request: NextRequest) {
         }
 
         for (const part of parts) {
-            if (part.inlineData) {
-                return NextResponse.json({
-                    imageBase64: part.inlineData.data,
-                    mimeType: part.inlineData.mimeType || "image/png",
-                });
+            if (!part.inlineData) continue;
+
+            const mimeType = part.inlineData.mimeType || "image/png";
+            const base64Data = part.inlineData.data!;
+
+            // Try uploading to Supabase Storage
+            const supabase = getSupabaseClient();
+            if (supabase) {
+                const ext = mimeToExt(mimeType);
+                const fileName = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+                const buffer = Buffer.from(base64Data, "base64");
+
+                const { error: uploadError } = await supabase.storage
+                    .from(BUCKET_NAME)
+                    .upload(fileName, buffer, {
+                        contentType: mimeType,
+                        cacheControl: "31536000",
+                    });
+
+                if (!uploadError) {
+                    const { data: urlData } = supabase.storage
+                        .from(BUCKET_NAME)
+                        .getPublicUrl(fileName);
+
+                    return NextResponse.json({
+                        imageUrl: urlData.publicUrl,
+                        mimeType,
+                    });
+                }
+
+                console.error("Supabase upload error:", uploadError);
             }
+
+            // Fallback: return base64 if Supabase is not configured or upload fails
+            return NextResponse.json({
+                imageBase64: base64Data,
+                mimeType,
+            });
         }
 
         return NextResponse.json(
