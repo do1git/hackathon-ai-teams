@@ -10,7 +10,7 @@ import { CCMessages } from "@/components/chat/cc-messages";
 import { PromptForm } from "@/components/chat/prompt-form";
 import { WorkspacePanel } from "@/components/workspace/workspace-panel";
 import type { SessionEntry, ConversationResponse } from "@/lib/types";
-import { PanelRight, Home as HomeIcon } from "lucide-react";
+import { PanelRight, Home as HomeIcon, Globe } from "lucide-react";
 
 // Pending message type for optimistic UI
 interface PendingMessage {
@@ -20,6 +20,13 @@ interface PendingMessage {
 }
 
 type Theme = 'lobby' | 'moorim' | 'galactic' | 'arcane' | 'fantasy';
+
+const LANGUAGES = [
+  { code: '한국어', label: '🇰🇷 한국어' },
+  { code: 'English', label: '🇺🇸 English' },
+  { code: '日本語', label: '🇯🇵 日本語' },
+  { code: '中文', label: '🇨🇳 中文' },
+];
 
 const WORLDS = [
   {
@@ -58,6 +65,8 @@ export default function Home() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showWorkspace, setShowWorkspace] = useState(false);
   const [activeTheme, setActiveTheme] = useState<Theme>("lobby");
+  const [language, setLanguage] = useState('한국어');
+  const [showLangMenu, setShowLangMenu] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -163,7 +172,11 @@ export default function Home() {
       setErrorMessage(null);
       postCompletionPollsRef.current = 0;
 
-      // Add pending message immediately for optimistic UI
+      // Prefix first message with language tag (metadata for the agent)
+      const isFirstMessage = !conversationId;
+      const messageContent = isFirstMessage ? `[Language: ${language}] ${content}` : content;
+
+      // Add pending message immediately for optimistic UI (show original content, not the tag)
       const pendingId = `pending-${Date.now()}`;
       const pendingMsg: PendingMessage = {
         id: pendingId,
@@ -178,7 +191,7 @@ export default function Home() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             conversationId,
-            content,
+            content: messageContent,
           }),
         });
 
@@ -198,7 +211,7 @@ export default function Home() {
         setIsSubmitting(false);
       }
     },
-    [conversationId]
+    [conversationId, language]
   );
 
   const handleWorldSelect = (world: typeof WORLDS[0]) => {
@@ -226,7 +239,33 @@ export default function Home() {
           <span className="font-mono text-xl font-bold text-primary rpg-title-glow">⚔️ Chronicles of Dimensions</span>
         </div>
         <div className="flex items-center gap-2">
-           {activeTheme !== 'lobby' && (
+          <div className="relative">
+            <button
+              onClick={() => setShowLangMenu((v) => !v)}
+              className="flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors text-sm"
+              title="Language"
+            >
+              <Globe className="w-4 h-4" />
+              <span>{LANGUAGES.find((l) => l.code === language)?.label ?? language}</span>
+            </button>
+            {showLangMenu && (
+              <>
+                <div className="fixed inset-0 z-20" onClick={() => setShowLangMenu(false)} />
+                <div className="absolute right-0 top-full mt-1 z-30 min-w-[140px] rounded-md border border-border bg-background shadow-lg py-1">
+                  {LANGUAGES.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => { setLanguage(l.code); setShowLangMenu(false); }}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors ${language === l.code ? 'text-primary font-medium' : 'text-foreground'}`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          {activeTheme !== 'lobby' && (
             <button
               onClick={handleReset}
               className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
