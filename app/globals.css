@@ -156,65 +156,30 @@
                 radial-gradient(circle at 0% 0%, oklch(0.8 0.15 80 / 0.1) 0%, transparent 40%);
 }
 
-/* FANTASY THEME - Parchment, Crimson, Metallic Gold */
+/* FANTASY THEME - Dark Terminal / Isekai Developer */
 [data-theme='fantasy'] {
-  --background: oklch(0.92 0.03 85); /* Parchment Beige */
-  --foreground: oklch(0.2 0.05 50); /* Dark Brown Ink */
-  --card: oklch(0.96 0.02 85);
-  --card-foreground: oklch(0.2 0.05 50);
-  --popover: oklch(0.94 0.02 85);
-  --popover-foreground: oklch(0.2 0.05 50);
-  --primary: oklch(0.5 0.2 25); /* Crimson Red */
-  --primary-foreground: oklch(0.98 0.01 85);
-  --secondary: oklch(0.88 0.04 85);
-  --secondary-foreground: oklch(0.2 0.05 50);
-  --muted: oklch(0.85 0.03 85);
-  --muted-foreground: oklch(0.4 0.05 50);
-  --accent: oklch(0.7 0.15 70); /* Metallic Gold */
-  --accent-foreground: oklch(0.2 0.05 50);
-  --destructive: oklch(0.5 0.2 25);
-  --border: oklch(0.8 0.04 85);
-  --input: oklch(0.85 0.04 85);
-  --ring: oklch(0.5 0.2 25);
-  --highlight: oklch(0.7 0.15 70);
+  --background: oklch(0.1 0.03 150);
+  --foreground: oklch(0.85 0.15 150);
+  --card: oklch(0.14 0.04 150);
+  --card-foreground: oklch(0.85 0.15 150);
+  --popover: oklch(0.12 0.04 150);
+  --popover-foreground: oklch(0.85 0.15 150);
+  --primary: oklch(0.7 0.2 150);
+  --primary-foreground: oklch(0.1 0.03 150);
+  --secondary: oklch(0.2 0.05 150);
+  --secondary-foreground: oklch(0.85 0.15 150);
+  --muted: oklch(0.18 0.03 150);
+  --muted-foreground: oklch(0.6 0.08 150);
+  --accent: oklch(0.5 0.15 80);
+  --accent-foreground: oklch(0.85 0.15 150);
+  --destructive: oklch(0.6 0.2 20);
+  --border: oklch(0.25 0.06 150);
+  --input: oklch(0.2 0.05 150);
+  --ring: oklch(0.7 0.2 150);
+  --highlight: oklch(0.7 0.2 150);
 
-  /* Paper Texture */
-  --bg-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
-}
-
-[data-theme='fantasy'] .prose,
-[data-theme='fantasy'] .prose.prose-invert {
-  --tw-prose-body: oklch(0.2 0.05 50) !important;
-  --tw-prose-headings: oklch(0.15 0.05 50) !important;
-  --tw-prose-lead: oklch(0.3 0.05 50) !important;
-  --tw-prose-links: oklch(0.4 0.15 25) !important;
-  --tw-prose-bold: oklch(0.15 0.05 50) !important;
-  --tw-prose-code: oklch(0.25 0.05 50) !important;
-  --tw-prose-pre-bg: oklch(0.95 0.02 85) !important;
-  --tw-prose-pre-code: oklch(0.2 0.05 50) !important;
-  --tw-prose-quotes: oklch(0.3 0.05 50) !important;
-  --tw-prose-counters: oklch(0.4 0.05 50) !important;
-  --tw-prose-bullets: oklch(0.4 0.05 50) !important;
-  --tw-prose-invert-body: oklch(0.2 0.05 50) !important;
-  --tw-prose-invert-headings: oklch(0.15 0.05 50) !important;
-  --tw-prose-invert-lead: oklch(0.3 0.05 50) !important;
-  --tw-prose-invert-links: oklch(0.4 0.15 25) !important;
-  --tw-prose-invert-bold: oklch(0.15 0.05 50) !important;
-  --tw-prose-invert-code: oklch(0.25 0.05 50) !important;
-  --tw-prose-invert-pre-bg: oklch(0.95 0.02 85) !important;
-  --tw-prose-invert-pre-code: oklch(0.2 0.05 50) !important;
-  --tw-prose-invert-quotes: oklch(0.3 0.05 50) !important;
-  --tw-prose-invert-counters: oklch(0.4 0.05 50) !important;
-  --tw-prose-invert-bullets: oklch(0.4 0.05 50) !important;
-  color: oklch(0.2 0.05 50) !important;
-}
-
-[data-theme='fantasy'] .text-foreground {
-  color: oklch(0.2 0.05 50) !important;
-}
-
-[data-theme='fantasy'] .text-muted-foreground {
-  color: oklch(0.4 0.05 50) !important;
+  --bg-pattern: radial-gradient(circle at 30% 20%, oklch(0.7 0.2 150 / 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, oklch(0.5 0.15 80 / 0.08) 0%, transparent 40%);
 }
 
 @layer base {
