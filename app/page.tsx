@@ -260,8 +260,19 @@ export default function Home() {
         })()
         : serverMessages;
 
+    const stripHiddenStats = (content: string | unknown[]): string | unknown[] => {
+        if (typeof content === "string") return content.replace(/<!--\s*STATS:[^>]*-->\s*/g, '');
+        if (Array.isArray(content)) return content.map((b: any) =>
+            b.type === "text" && b.text ? { ...b, text: b.text.replace(/<!--\s*STATS:[^>]*-->\s*/g, '') } : b
+        );
+        return content;
+    };
+
     const messages: SessionEntry[] = [
-        ...filteredServerMessages,
+        ...filteredServerMessages.map((m) => m.type === "assistant"
+            ? { ...m, message: { ...m.message, content: stripHiddenStats(m.message.content) } }
+            : m
+        ),
         ...pendingMessages
             .filter((p) => !worldSelectRef.current || !p.content.includes(worldSelectRef.current))
             .map((p): SessionEntry => ({

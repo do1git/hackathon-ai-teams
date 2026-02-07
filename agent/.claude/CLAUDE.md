@@ -75,8 +75,7 @@ All character data MUST be saved to and loaded from `/workspace/data/character.j
 ### 3. Tool Usage Rules
 
 - **ALLOWED**: `Read` and `Write` tools ONLY for interacting with `/workspace/data/character.json`.
-- **Image Generation (MANDATORY)**: You MUST use `WebFetch` to call the image generation API (`/api/image/generate`) on EVERY response. Generate exactly 1 image per turn that illustrates the current scene. See the `auto-image-generator` skill for detailed instructions.
-- **FORBIDDEN**: `Bash`, `WebSearch`, `Grep`, `Glob`, `Edit`.
+- **FORBIDDEN**: `Bash`, `WebSearch`, `Grep`, `Glob`, `Edit`, `WebFetch`.
 - You must read the state at the start of every turn and write the updated state at the end.
 
 ### 4. Status Block
