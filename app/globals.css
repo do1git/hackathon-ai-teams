@@ -32,28 +32,154 @@
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* 
+  THEME SYSTEM
+  Uses OKLCH for vibrant, consistent perception across themes.
+  Default is 'lobby'.
+*/
+
 :root {
+  /* Shared Defaults */
   --radius: 0.5rem;
-  /* Darker, richer background for RPG feel */
-  --background: oklch(0.15 0.02 260);
-  --foreground: oklch(0.9551 0 0);
-  --card: oklch(0.2 0.02 260);
-  --card-foreground: oklch(0.9551 0 0);
-  --popover: oklch(0.2 0.02 260);
-  --popover-foreground: oklch(0.9551 0 0);
-  --primary: oklch(0.85 0.15 85); /* Golden/Amber tint */
-  --primary-foreground: oklch(0.2 0.02 260);
-  --secondary: oklch(0.25 0.02 260);
-  --secondary-foreground: oklch(0.9551 0 0);
-  --muted: oklch(0.25 0.02 260);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.35 0.12 65);
-  --accent-foreground: oklch(0.9551 0 0);
-  --destructive: oklch(0.6 0.15 25);
-  --border: oklch(0.3 0.02 260);
-  --input: oklch(0.25 0.02 260);
-  --ring: oklch(0.7 0.15 85);
-  --highlight: oklch(0.5 0.15 85);
+  
+  /* LOBBY THEME (Default) - Deep Void / Nebula */
+  --background: oklch(0.12 0.03 260);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.17 0.03 260);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.15 0.03 260);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.75 0.15 250); /* Electric Blue */
+  --primary-foreground: oklch(0.1 0.03 260);
+  --secondary: oklch(0.25 0.05 260);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.2 0.03 260);
+  --muted-foreground: oklch(0.7 0.02 260);
+  --accent: oklch(0.3 0.1 250);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.6 0.2 20);
+  --border: oklch(0.25 0.05 260);
+  --input: oklch(0.25 0.05 260);
+  --ring: oklch(0.75 0.15 250);
+  --highlight: oklch(0.6 0.15 250);
+  
+  /* Fonts */
+  --font-heading: var(--font-geist-sans);
+  
+  /* Background Pattern */
+  --bg-pattern: radial-gradient(circle at 50% 0%, oklch(0.25 0.1 260 / 0.2) 0%, transparent 70%),
+                radial-gradient(circle at 80% 80%, oklch(0.2 0.1 300 / 0.15) 0%, transparent 50%);
+}
+
+/* MOORIM THEME - Ink Black, Paper White, Amber */
+[data-theme='moorim'] {
+  --background: oklch(0.1 0.01 80); /* Deep Ink */
+  --foreground: oklch(0.95 0.02 85); /* Rice Paper */
+  --card: oklch(0.15 0.02 80);
+  --card-foreground: oklch(0.95 0.02 85);
+  --popover: oklch(0.12 0.02 80);
+  --popover-foreground: oklch(0.95 0.02 85);
+  --primary: oklch(0.8 0.18 70); /* Warm Amber/Gold */
+  --primary-foreground: oklch(0.1 0.02 80);
+  --secondary: oklch(0.2 0.03 80);
+  --secondary-foreground: oklch(0.95 0.02 85);
+  --muted: oklch(0.18 0.02 80);
+  --muted-foreground: oklch(0.6 0.02 80);
+  --accent: oklch(0.3 0.05 70);
+  --accent-foreground: oklch(0.95 0.02 85);
+  --destructive: oklch(0.55 0.2 25); /* Blood Red */
+  --border: oklch(0.25 0.03 80);
+  --input: oklch(0.2 0.03 80);
+  --ring: oklch(0.7 0.15 70);
+  --highlight: oklch(0.8 0.18 70);
+
+  /* Ink wash effect */
+  --bg-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 20% 30%, oklch(0.8 0.18 70 / 0.08) 0%, transparent 60%);
+}
+
+/* GALACTIC THEME - Deep Space, Neon Cyan, Magenta */
+[data-theme='galactic'] {
+  --background: oklch(0.08 0.05 280); /* Deep Space Blue */
+  --foreground: oklch(0.95 0.02 200);
+  --card: oklch(0.12 0.06 280);
+  --card-foreground: oklch(0.95 0.02 200);
+  --popover: oklch(0.1 0.06 280);
+  --popover-foreground: oklch(0.95 0.02 200);
+  --primary: oklch(0.7 0.2 190); /* Neon Cyan */
+  --primary-foreground: oklch(0.05 0.05 280);
+  --secondary: oklch(0.2 0.08 280);
+  --secondary-foreground: oklch(0.95 0.02 200);
+  --muted: oklch(0.15 0.06 280);
+  --muted-foreground: oklch(0.6 0.05 280);
+  --accent: oklch(0.6 0.25 330); /* Bright Magenta */
+  --accent-foreground: oklch(0.95 0.02 200);
+  --destructive: oklch(0.6 0.2 20);
+  --border: oklch(0.25 0.08 280);
+  --input: oklch(0.2 0.08 280);
+  --ring: oklch(0.7 0.2 190);
+  --highlight: oklch(0.7 0.2 190);
+
+  /* Stars and Grid */
+  --bg-pattern: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px),
+                linear-gradient(0deg, transparent 24%, oklch(0.7 0.2 190 / 0.05) 25%, oklch(0.7 0.2 190 / 0.05) 26%, transparent 27%, transparent 74%, oklch(0.7 0.2 190 / 0.05) 75%, oklch(0.7 0.2 190 / 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, oklch(0.7 0.2 190 / 0.05) 25%, oklch(0.7 0.2 190 / 0.05) 26%, transparent 27%, transparent 74%, oklch(0.7 0.2 190 / 0.05) 75%, oklch(0.7 0.2 190 / 0.05) 76%, transparent 77%, transparent);
+  background-size: 550px 550px, 350px 350px, 250px 250px, 50px 50px, 50px 50px;
+}
+
+/* ARCANE THEME - Mystic Purple, Indigo, Gold */
+[data-theme='arcane'] {
+  --background: oklch(0.1 0.08 290); /* Deep Mystic Purple */
+  --foreground: oklch(0.95 0.02 300);
+  --card: oklch(0.15 0.09 290);
+  --card-foreground: oklch(0.95 0.02 300);
+  --popover: oklch(0.12 0.09 290);
+  --popover-foreground: oklch(0.95 0.02 300);
+  --primary: oklch(0.8 0.15 80); /* Glowing Gold */
+  --primary-foreground: oklch(0.1 0.08 290);
+  --secondary: oklch(0.25 0.1 290);
+  --secondary-foreground: oklch(0.95 0.02 300);
+  --muted: oklch(0.2 0.08 290);
+  --muted-foreground: oklch(0.7 0.05 290);
+  --accent: oklch(0.4 0.15 280); /* Vivid Violet */
+  --accent-foreground: oklch(0.95 0.02 300);
+  --destructive: oklch(0.6 0.2 20);
+  --border: oklch(0.3 0.1 290);
+  --input: oklch(0.25 0.1 290);
+  --ring: oklch(0.8 0.15 80);
+  --highlight: oklch(0.6 0.2 280);
+
+  /* Magical Aura */
+  --bg-pattern: radial-gradient(circle at 50% 100%, oklch(0.4 0.15 280 / 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, oklch(0.8 0.15 80 / 0.1) 0%, transparent 40%);
+}
+
+/* FANTASY THEME - Parchment, Crimson, Metallic Gold */
+[data-theme='fantasy'] {
+  --background: oklch(0.92 0.03 85); /* Parchment Beige */
+  --foreground: oklch(0.2 0.05 50); /* Dark Brown Ink */
+  --card: oklch(0.96 0.02 85);
+  --card-foreground: oklch(0.2 0.05 50);
+  --popover: oklch(0.94 0.02 85);
+  --popover-foreground: oklch(0.2 0.05 50);
+  --primary: oklch(0.5 0.2 25); /* Crimson Red */
+  --primary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.88 0.04 85);
+  --secondary-foreground: oklch(0.2 0.05 50);
+  --muted: oklch(0.85 0.03 85);
+  --muted-foreground: oklch(0.4 0.05 50);
+  --accent: oklch(0.7 0.15 70); /* Metallic Gold */
+  --accent-foreground: oklch(0.2 0.05 50);
+  --destructive: oklch(0.5 0.2 25);
+  --border: oklch(0.8 0.04 85);
+  --input: oklch(0.85 0.04 85);
+  --ring: oklch(0.5 0.2 25);
+  --highlight: oklch(0.7 0.15 70);
+
+  /* Paper Texture */
+  --bg-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
 }
 
 @layer base {
@@ -61,9 +187,9 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-    /* RPG Vignette effect */
-    background-image: radial-gradient(circle at center, transparent 0%, oklch(0.1 0.02 260 / 0.8) 100%);
+    @apply bg-background text-foreground transition-colors duration-500 ease-in-out;
+    background-image: var(--bg-pattern);
+    background-attachment: fixed;
     min-height: 100vh;
   }
 }
@@ -89,13 +215,44 @@ body,
     var(--highlight-shadow);
 }
 
+/* ANIMATIONS */
+
+/* Fade In */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Pulse Glow */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px var(--primary); }
+  50% { box-shadow: 0 0 25px var(--primary); }
+}
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Typewriter */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+.animate-typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 2s steps(40, end);
+}
+
 /* Shimmer animation for loading states */
 .shimmer {
   background: linear-gradient(
     90deg,
-    #737373 25%,
+    var(--muted) 25%,
     var(--foreground) 50%,
-    #737373 75%
+    var(--muted) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
@@ -105,12 +262,8 @@ body,
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Blinking animation for tool status */
@@ -119,13 +272,8 @@ body,
 }
 
 @keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* RPG Specific Styles */
@@ -133,10 +281,12 @@ body,
 /* Title Glow Animation */
 @keyframes title-glow {
   0%, 100% {
-    text-shadow: 0 0 10px oklch(0.85 0.15 85 / 0.3), 0 0 20px oklch(0.85 0.15 85 / 0.1);
+    text-shadow: 0 0 10px color-mix(in oklch, var(--primary), transparent 70%), 
+                 0 0 20px color-mix(in oklch, var(--primary), transparent 90%);
   }
   50% {
-    text-shadow: 0 0 15px oklch(0.85 0.15 85 / 0.5), 0 0 30px oklch(0.85 0.15 85 / 0.2);
+    text-shadow: 0 0 15px color-mix(in oklch, var(--primary), transparent 50%), 
+                 0 0 30px color-mix(in oklch, var(--primary), transparent 80%);
   }
 }
 
@@ -152,7 +302,7 @@ body,
 
 .rpg-card:hover {
   @apply border-primary/50 scale-[1.02];
-  box-shadow: 0 0 20px oklch(0.85 0.15 85 / 0.1);
+  box-shadow: 0 0 20px color-mix(in oklch, var(--primary), transparent 90%);
 }
 
 .rpg-card::before {
@@ -162,7 +312,7 @@ body,
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, transparent 0%, oklch(0.85 0.15 85 / 0.03) 50%, transparent 100%);
+  background: linear-gradient(45deg, transparent 0%, color-mix(in oklch, var(--primary), transparent 97%) 50%, transparent 100%);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
@@ -171,7 +321,7 @@ body,
   transform: translateX(100%);
 }
 
-/* Fade In Animation */
+/* Fade In Up Animation */
 @keyframes fade-in-up {
   from {
     opacity: 0;

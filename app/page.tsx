@@ -10,7 +10,7 @@ import { CCMessages } from "@/components/chat/cc-messages";
 import { PromptForm } from "@/components/chat/prompt-form";
 import { WorkspacePanel } from "@/components/workspace/workspace-panel";
 import type { SessionEntry, ConversationResponse } from "@/lib/types";
-import { PanelRight } from "lucide-react";
+import { PanelRight, Home as HomeIcon } from "lucide-react";
 
 // Pending message type for optimistic UI
 interface PendingMessage {
@@ -19,26 +19,32 @@ interface PendingMessage {
   timestamp: string;
 }
 
+type Theme = 'lobby' | 'moorim' | 'galactic' | 'arcane' | 'fantasy';
+
 const WORLDS = [
   {
     icon: "🗡️",
     title: "무림",
     desc: "강호의 세계, 무공과 협객의 이야기",
+    theme: "moorim" as Theme,
   },
   {
     icon: "🚀",
     title: "갤럭틱 오디세이",
     desc: "은하 제국과 자유연합의 전쟁",
+    theme: "galactic" as Theme,
   },
   {
     icon: "🪄",
     title: "아케인 아칸",
     desc: "마법 학교와 금지된 마법의 비밀",
+    theme: "arcane" as Theme,
   },
   {
     icon: "💍",
     title: "고대 반지의 연대기",
     desc: "종족 연합과 어둠의 군주",
+    theme: "fantasy" as Theme,
   }
 ];
 
@@ -51,6 +57,8 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showWorkspace, setShowWorkspace] = useState(false);
+  const [activeTheme, setActiveTheme] = useState<Theme>("lobby");
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Track post-completion poll attempts to avoid infinite polling
@@ -193,15 +201,40 @@ export default function Home() {
     [conversationId]
   );
 
+  const handleWorldSelect = (world: typeof WORLDS[0]) => {
+    setActiveTheme(world.theme);
+    handleSubmit(world.title);
+  };
+
+  const handleReset = () => {
+    setActiveTheme("lobby");
+    setConversationId(null);
+    setServerMessages([]);
+    setPendingMessages([]);
+    setStatus("idle");
+    setErrorMessage(null);
+  };
+
   const isLoading = status === "running" || isSubmitting;
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-screen flex-col bg-background">
+    <div data-theme={activeTheme} className="flex h-screen flex-col bg-background min-h-screen transition-colors duration-1000">
       {/* Header - RPG Style */}
-      <header className="flex items-center justify-center border-b border-border/40 bg-background/80 backdrop-blur-md px-4 h-[60px] sticky top-0 z-10">
+      <header className="flex items-center justify-between border-b border-border/40 bg-background/80 backdrop-blur-md px-4 h-[60px] sticky top-0 z-10">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xl font-bold text-primary rpg-title-glow">⚔️ AI RPG</span>
+          <span className="font-mono text-xl font-bold text-primary rpg-title-glow">⚔️ Chronicles of Dimensions</span>
+        </div>
+        <div className="flex items-center gap-2">
+           {activeTheme !== 'lobby' && (
+            <button
+              onClick={handleReset}
+              className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              title="Return to Lobby"
+            >
+              <HomeIcon className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </header>
 
@@ -216,10 +249,10 @@ export default function Home() {
                 <div className="flex min-h-full flex-col items-center justify-center px-4 py-10 animate-fade-in-up">
                   <div className="text-center mb-12 space-y-4">
                     <h1 className="font-mono text-5xl md:text-6xl font-bold text-primary rpg-title-glow mb-2">
-                      AI 텍스트 RPG
+                      Chronicles of Dimensions
                     </h1>
                     <p className="text-xl text-muted-foreground delay-100 animate-fade-in-up">
-                      당신만의 모험이 시작됩니다
+                      Infinite Tales
                     </p>
                   </div>
 
@@ -227,7 +260,7 @@ export default function Home() {
                     {WORLDS.map((world) => (
                       <button
                         key={world.title}
-                        onClick={() => handleSubmit(world.title)}
+                        onClick={() => handleWorldSelect(world)}
                         className="rpg-card text-left group"
                         disabled={isLoading}
                       >
@@ -307,3 +340,5 @@ export default function Home() {
     </div>
   );
 }
+
+

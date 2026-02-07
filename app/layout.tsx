@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI 텍스트 RPG — 당신의 모험이 시작됩니다",
-  description: "AI와 함께하는 무한한 상상력의 세계. 당신만의 이야기를 만들어보세요.",
+  title: "Chronicles of Dimensions: Infinite Tales",
+  description: "AI와 함께하는 차원 여행. 당신만의 전설을 써내려가세요.",
 };
 
 export default function RootLayout({
