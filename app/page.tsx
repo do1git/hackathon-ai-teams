@@ -274,7 +274,11 @@ export default function Home() {
             : m
         ),
         ...pendingMessages
-            .filter((p) => !worldSelectRef.current || !p.content.includes(worldSelectRef.current))
+            .filter((p) => {
+                if (worldSelectRef.current && p.content.includes(worldSelectRef.current)) return false;
+                if (hasPendingMatch(p, serverMessages)) return false;
+                return true;
+            })
             .map((p): SessionEntry => ({
                 type: "user",
                 uuid: p.id,
