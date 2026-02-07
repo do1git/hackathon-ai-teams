@@ -243,16 +243,26 @@ export default function Home() {
     return () => clearInterval(pollInterval);
   }, [conversationId, status, pendingMessages.length, hasPendingMatch]);
 
+  const filteredServerMessages = worldSelectRef.current
+    ? (() => {
+        let skipped = false;
+        return serverMessages.filter((m) => {
+          if (!skipped && m.type === "user") {
+            const text = getUserMessageText(m.message.content);
+            if (text.includes(worldSelectRef.current!)) {
+              skipped = true;
+              return false;
+            }
+          }
+          return true;
+        });
+      })()
+    : serverMessages;
+
   const messages: SessionEntry[] = [
-    ...serverMessages.filter((m, idx) => {
-      if (idx === 0 && m.type === "user" && worldSelectRef.current) {
-        const text = getUserMessageText(m.message.content);
-        if (text.includes(worldSelectRef.current)) return false;
-      }
-      return true;
-    }),
+    ...filteredServerMessages,
     ...pendingMessages
-      .filter((p) => !worldSelectRef.current || p.content !== worldSelectRef.current)
+      .filter((p) => !worldSelectRef.current || !p.content.includes(worldSelectRef.current))
       .map((p): SessionEntry => ({
         type: "user",
         uuid: p.id,
