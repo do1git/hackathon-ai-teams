@@ -27,7 +27,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [showWorkspace, setShowWorkspace] = useState(true);
+  const [showWorkspace, setShowWorkspace] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Track post-completion poll attempts to avoid infinite polling
@@ -178,7 +178,7 @@ export default function Home() {
       {/* Header - minimal like Maru */}
       <header className="flex items-center justify-between border-b border-border px-4 h-[52px]">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm font-medium">hackathon-starter</span>
+          <span className="font-mono text-sm font-medium">⚔️ AI RPG</span>
         </div>
         {!showWorkspace && (
           <button
@@ -201,14 +201,14 @@ export default function Home() {
               {!hasMessages ? (
                 <div className="flex h-full flex-col items-center justify-center px-4">
                   <h1 className="font-mono text-lg mb-6">
-                    ✳ What can I help with?
+                    ⚔️ 모험을 시작하세요
                   </h1>
                   <div className="w-full max-w-xl">
                     <PromptForm
                       onSubmit={handleSubmit}
                       isLoading={isLoading}
                       disabled={status === "running"}
-                      placeholder="Ask anything"
+                      placeholder="아무 말이나 입력하면 게임이 시작됩니다..."
                     />
                   </div>
                 </div>
@@ -242,7 +242,7 @@ export default function Home() {
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
                     disabled={status === "running"}
-                    placeholder="Follow-up message..."
+                    placeholder="행동을 선택하거나 자유롭게 입력하세요..."
                   />
                 </div>
               </div>

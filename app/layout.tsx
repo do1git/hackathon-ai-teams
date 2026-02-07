@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hackathon Starter",
-  description: "Claude Agent SDK + Moru Sandbox Demo",
+  title: "AI 텍스트 RPG — 당신의 모험이 시작됩니다",
+  description: "AI와 함께하는 무한한 상상력의 세계. 당신만의 이야기를 만들어보세요.",
 };
 
 export default function RootLayout({
