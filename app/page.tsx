@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import {
     ResizablePanelGroup,
     ResizablePanel,
@@ -27,6 +27,33 @@ const LANGUAGES = [
     { code: '日本語', label: '🇯🇵 日本語' },
     { code: '中文', label: '🇨🇳 中文' },
 ];
+
+const I18N: Record<string, { loading: string; error: string; lobbyPlaceholder: string; gamePlaceholder: string }> = {
+    '한국어': {
+        loading: '스토리 텔러가 이야기를 준비하고 있습니다...',
+        error: '서버와의 연결이 불안정합니다. 잠시 후 다시 시도해주세요.',
+        lobbyPlaceholder: '또는 직접 입력하여 모험을 시작하세요...',
+        gamePlaceholder: '행동을 선택하거나 자유롭게 입력하세요...',
+    },
+    'English': {
+        loading: 'The storyteller is preparing your tale...',
+        error: 'Connection unstable. Please try again shortly.',
+        lobbyPlaceholder: 'Or type your own adventure...',
+        gamePlaceholder: 'Choose an action or type freely...',
+    },
+    '日本語': {
+        loading: 'ストーリーテラーが物語を準備しています...',
+        error: 'サーバーとの接続が不安定です。しばらくしてからもう一度お試しください。',
+        lobbyPlaceholder: 'または直接入力して冒険を始めましょう...',
+        gamePlaceholder: '行動を選択するか、自由に入力してください...',
+    },
+    '中文': {
+        loading: '故事讲述者正在准备您的故事...',
+        error: '服务器连接不稳定，请稍后再试。',
+        lobbyPlaceholder: '或者直接输入开始冒险...',
+        gamePlaceholder: '选择行动或自由输入...',
+    },
+};
 
 const WORLDS = [
     {
@@ -244,21 +271,20 @@ export default function Home() {
         return () => clearInterval(pollInterval);
     }, [conversationId, status, pendingMessages.length, hasPendingMatch]);
 
-    const filteredServerMessages = worldSelectRef.current
-        ? (() => {
-            let skipped = false;
-            return serverMessages.filter((m) => {
-                if (!skipped && m.type === "user") {
-                    const text = getUserMessageText(m.message.content);
-                    if (text.includes(worldSelectRef.current!)) {
-                        skipped = true;
-                        return false;
-                    }
+    const filteredServerMessages = useMemo(() => {
+        if (!worldSelectRef.current) return serverMessages;
+        let skipped = false;
+        return serverMessages.filter((m) => {
+            if (!skipped && m.type === "user") {
+                const text = getUserMessageText(m.message.content);
+                if (text.includes(worldSelectRef.current!)) {
+                    skipped = true;
+                    return false;
                 }
-                return true;
-            });
-        })()
-        : serverMessages;
+            }
+            return true;
+        });
+    }, [serverMessages, getUserMessageText]);
 
     const stripHiddenStats = (content: string | unknown[]): string | unknown[] => {
         if (typeof content === "string") return content.replace(/<!--\s*STATS:[^>]*-->\s*/g, '');
@@ -268,7 +294,7 @@ export default function Home() {
         return content;
     };
 
-    const messages: SessionEntry[] = [
+    const messages: SessionEntry[] = useMemo(() => [
         ...filteredServerMessages.map((m) => m.type === "assistant"
             ? { ...m, message: { ...m.message, content: stripHiddenStats(m.message.content) as ContentBlock[] } }
             : m
@@ -291,7 +317,7 @@ export default function Home() {
                     content: p.content,
                 },
             })),
-    ];
+    ], [filteredServerMessages, pendingMessages, serverMessages, hasPendingMatch]);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const userScrolledUpRef = useRef(false);
@@ -469,13 +495,13 @@ export default function Home() {
                                             onSubmit={handleSubmit}
                                             isLoading={isLoading}
                                             disabled={status === "running"}
-                                            placeholder="또는 직접 입력하여 모험을 시작하세요..."
+                                            placeholder={I18N[language]?.lobbyPlaceholder ?? I18N['한국어'].lobbyPlaceholder}
                                         />
                                     </div>
                                 </div>
                             ) : (
                                 <div className="max-w-3xl mx-auto px-4 py-6">
-                                    <CCMessages entries={messages} />
+                                    <CCMessages entries={messages} hideToolBlocks={activeTheme !== 'lobby'} />
                                     <div ref={messagesEndRef} />
                                 </div>
                             )}
@@ -485,7 +511,7 @@ export default function Home() {
                         {errorMessage && (
                             <div className="mx-4 mb-2 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive shadow-lg animate-fade-in-up">
                                 <span className="mr-2">⚠️</span>
-                                서버와의 연결이 불안정합니다. 잠시 후 다시 시도해주세요.
+                                {I18N[language]?.error ?? I18N['한국어'].error}
                             </div>
                         )}
 
@@ -493,7 +519,7 @@ export default function Home() {
                         {status === "running" && hasMessages && (
                             <div className="mx-4 mb-2 text-sm text-primary/80 font-mono flex items-center justify-center">
                                 <span className="animate-pulse mr-2">🔮</span>
-                                <span className="shimmer">스토리 텔러가 이야기를 준비하고 있습니다...</span>
+                                <span className="shimmer">{I18N[language]?.loading ?? I18N['한국어'].loading}</span>
                             </div>
                         )}
 
@@ -554,7 +580,7 @@ export default function Home() {
                                         onSubmit={handleSubmit}
                                         isLoading={isLoading}
                                         disabled={status === "running"}
-                                        placeholder="행동을 선택하거나 자유롭게 입력하세요..."
+                                        placeholder={I18N[language]?.gamePlaceholder ?? I18N['한국어'].gamePlaceholder}
                                     />
                                 </div>
                             </div>
