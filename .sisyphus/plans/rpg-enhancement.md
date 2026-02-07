@@ -58,13 +58,13 @@
 - origin/main에 push된 코드
 
 ### Definition of Done
-- [ ] 게임 시작 → 세계관 선택 → 캐릭터 생성 → 모험 진행이 매끄럽게 동작
-- [ ] 매 턴마다 캐릭터 상태(HP/MP/레벨/인벤토리)가 표시됨
-- [ ] 멀티턴 대화에서 캐릭터 상태가 유지됨
-- [ ] 4개 세계관 모두 고유 NPC/지명이 등장
-- [ ] `pnpm build` 성공
-- [ ] `pnpm build:template` 성공
-- [ ] Playwright E2E 테스트 통과
+- [x] 게임 시작 → 세계관 선택 → 캐릭터 생성 → 모험 진행이 매끄럽게 동작
+- [x] 매 턴 마다 캐릭터 상태(HP/MP/레벨/인벤토리)가 표시됨
+- [x] 멀티턴 대화에서 캐릭터 상태가 유지됨
+- [x] 4개 세계관 모두 고유 NPC/지명이 등장
+- [x] `pnpm build` 성공
+- [x] `pnpm build:template` 성공
+- [x] Playwright E2E 테스트 통과
 
 ### Must Have
 - HP, MP, 경험치, 레벨, 인벤토리, 골드 시스템
@@ -833,17 +833,17 @@ pnpm build:template  # Expected: "Build Complete!"
 ```
 
 ### Final Checklist
-- [ ] CLAUDE.md에 RPG 스탯 시스템 정의 (HP, MP, 공격, 방어, 레벨, XP, 골드, 인벤토리)
-- [ ] CLAUDE.md에 character.json 스키마 및 저장/로드 지시 포함
-- [ ] CLAUDE.md에 4개 세계관 각각 NPC, 지명, 직업, 기본무기, 고유설정 포함
-- [ ] CLAUDE.md에 도구 제한 (Read/Write만 허용, 나머지 금지) 명확히 기재
-- [ ] CLAUDE.md에 상태 블록 형식 포함
-- [ ] CLAUDE.md에 캐릭터 사망/게임오버 처리 포함
-- [ ] CLAUDE.md에 스토리 아크 구조 포함
-- [ ] 세계관 이름이 page.tsx의 WORLDS 배열과 정확히 일치
-- [ ] `pnpm build` 성공
-- [ ] `pnpm build:template` 성공
-- [ ] Playwright E2E 테스트 통과
-- [ ] origin/main에 push 완료
-- [ ] 저작권 이름 없음
-- [ ] CLAUDE.md 350줄 이하
+- [x] CLAUDE.md에 RPG 스탯 시스템 정의 (HP, MP, 공격, 방어, 레벨, XP, 골드, 인벤토리)
+- [x] CLAUDE.md에 character.json 스키마 및 저장/로드 지시 포함
+- [x] CLAUDE.md에 4개 세계관 각각 NPC, 지명, 직업, 기본무기, 고유설정 포함
+- [x] CLAUDE.md에 도구 제한 (Read/Write만 허용, 나머지 금지) 명확히 기재
+- [x] CLAUDE.md에 상태 블록 형식 포함
+- [x] CLAUDE.md에 캐릭터 사망/게임오버 처리 포함
+- [x] CLAUDE.md에 스토리 아크 구조 포함
+- [x] 세계관 이름이 page.tsx의 WORLDS 배열과 정확히 일치
+- [x] `pnpm build` 성공
+- [x] `pnpm build:template` 성공
+- [x] Playwright E2E 테스트 통과
+- [x] origin/main에 push 완료
+- [x] 저작권 이름 없음
+- [x] CLAUDE.md 350줄 이하
