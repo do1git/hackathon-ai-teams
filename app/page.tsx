@@ -243,21 +243,28 @@ export default function Home() {
     return () => clearInterval(pollInterval);
   }, [conversationId, status, pendingMessages.length, hasPendingMatch]);
 
-  // Compute combined messages: server messages + pending messages as SessionEntry
   const messages: SessionEntry[] = [
-    ...serverMessages,
-    ...pendingMessages.map((p): SessionEntry => ({
-      type: "user",
-      uuid: p.id,
-      parentUuid: serverMessages.length > 0 ? serverMessages[serverMessages.length - 1].uuid : null,
-      sessionId: "",
-      timestamp: p.timestamp,
-      isSidechain: false,
-      message: {
-        role: "user",
-        content: p.content,
-      },
-    })),
+    ...serverMessages.filter((m, idx) => {
+      if (idx === 0 && m.type === "user" && worldSelectRef.current) {
+        const text = getUserMessageText(m.message.content);
+        if (text.includes(worldSelectRef.current)) return false;
+      }
+      return true;
+    }),
+    ...pendingMessages
+      .filter((p) => !worldSelectRef.current || p.content !== worldSelectRef.current)
+      .map((p): SessionEntry => ({
+        type: "user",
+        uuid: p.id,
+        parentUuid: serverMessages.length > 0 ? serverMessages[serverMessages.length - 1].uuid : null,
+        sessionId: "",
+        timestamp: p.timestamp,
+        isSidechain: false,
+        message: {
+          role: "user",
+          content: p.content,
+        },
+      })),
   ];
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -328,8 +335,11 @@ export default function Home() {
     [conversationId, language]
   );
 
+  const worldSelectRef = useRef<string | null>(null);
+
   const handleWorldSelect = (world: typeof WORLDS[0]) => {
     setActiveTheme(world.theme);
+    worldSelectRef.current = world.title;
     handleSubmit(world.title);
   };
 
@@ -341,6 +351,7 @@ export default function Home() {
     setStatus("idle");
     setErrorMessage(null);
     setCharacterStats(null);
+    worldSelectRef.current = null;
   };
 
   const isLoading = status === "running" || isSubmitting;
