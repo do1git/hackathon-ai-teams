@@ -16,6 +16,7 @@ Generate exactly **one image per response** to provide visual context for every 
 ### Step 1: Analyze the context
 
 Determine what visual would best represent the current conversation:
+
 - For RPG: the current scene, action, or environment
 - For general chat: a visual metaphor or illustration of the topic
 - For technical discussions: a conceptual diagram or abstract representation
@@ -29,6 +30,7 @@ Create a descriptive prompt that captures the essence of the conversation. Use t
 ```
 
 **Style keywords by context**:
+
 - RPG/Fantasy → `fantasy illustration, painterly style, dramatic lighting`
 - Sci-fi → `sci-fi concept art, futuristic, neon accents`
 - General → `digital art, modern illustration, clean aesthetic`
@@ -45,9 +47,10 @@ Headers: { "Content-Type": "application/json" }
 Body: { "prompt": "<your crafted prompt>" }
 ```
 
-Where `${CALLBACK_URL_BASE}` is the base URL derived from `CALLBACK_URL` environment variable (strip the `/api/conversations/...` path suffix — use everything before `/api/`).
+Where `${CALLBACK_URL_BASE}` is the environment variable already set in your environment (e.g. `https://your-app.vercel.app`). Read it directly with `process.env.CALLBACK_URL_BASE` or `$CALLBACK_URL_BASE` — do NOT guess or hardcode the URL.
 
 The response JSON contains:
+
 ```json
 { "imageBase64": "<base64 data>", "mimeType": "image/png" }
 ```
