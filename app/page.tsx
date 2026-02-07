@@ -391,7 +391,7 @@ export default function Home() {
             {status === "running" && hasMessages && (
               <div className="mx-4 mb-2 text-sm text-primary/80 font-mono flex items-center justify-center">
                 <span className="animate-pulse mr-2">🔮</span>
-                <span className="shimmer">게임 마스터가 이야기를 준비하고 있습니다...</span>
+                <span className="shimmer">스토리 텔러가 이야기를 준비하고 있습니다...</span>
               </div>
             )}
 
