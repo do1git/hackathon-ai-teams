@@ -9,7 +9,7 @@ import {
 import { CCMessages } from "@/components/chat/cc-messages";
 import { PromptForm } from "@/components/chat/prompt-form";
 import { WorkspacePanel } from "@/components/workspace/workspace-panel";
-import type { SessionEntry, ConversationResponse } from "@/lib/types";
+import type { SessionEntry, ConversationResponse, ContentBlock } from "@/lib/types";
 import { PanelRight, Home as HomeIcon, Globe } from "lucide-react";
 
 // Pending message type for optimistic UI
@@ -183,16 +183,16 @@ export default function Home() {
 
     // Check if a pending message has a matching user message in server data.
     // Used to remove pending messages once the server confirms them.
-  const hasPendingMatch = useCallback(
-    (pending: PendingMessage, serverMsgs: SessionEntry[]) => {
-      return serverMsgs.some(
-        (m) =>
-          m.type === "user" &&
-          getUserMessageText(m.message.content).includes(pending.content)
-      );
-    },
-    [getUserMessageText]
-  );
+    const hasPendingMatch = useCallback(
+        (pending: PendingMessage, serverMsgs: SessionEntry[]) => {
+            return serverMsgs.some(
+                (m) =>
+                    m.type === "user" &&
+                    getUserMessageText(m.message.content).includes(pending.content)
+            );
+        },
+        [getUserMessageText]
+    );
 
     // Polling for conversation updates
     // Keeps polling while "running", and also after "completed"/"error" if
@@ -270,7 +270,7 @@ export default function Home() {
 
     const messages: SessionEntry[] = [
         ...filteredServerMessages.map((m) => m.type === "assistant"
-            ? { ...m, message: { ...m.message, content: stripHiddenStats(m.message.content) } }
+            ? { ...m, message: { ...m.message, content: stripHiddenStats(m.message.content) as ContentBlock[] } }
             : m
         ),
         ...pendingMessages
