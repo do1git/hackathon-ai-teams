@@ -268,7 +268,7 @@ export default function Home() {
       {/* Header - RPG Style */}
       <header className="flex items-center justify-between border-b border-border/40 bg-background/80 backdrop-blur-md px-4 h-[60px] sticky top-0 z-10">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xl font-bold text-primary rpg-title-glow">⚔️ Chronicles of Dimensions</span>
+          <span className="font-mono text-xl font-bold text-primary rpg-title-glow">📜 Chronicles of Dimensions</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
