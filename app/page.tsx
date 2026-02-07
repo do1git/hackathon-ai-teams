@@ -67,6 +67,24 @@ export default function Home() {
   const [activeTheme, setActiveTheme] = useState<Theme>("lobby");
   const [language, setLanguage] = useState('한국어');
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [characterStats, setCharacterStats] = useState<{
+    name?: string;
+    class?: string;
+    world?: string;
+    level?: number;
+    hp?: number;
+    maxHp?: number;
+    mp?: number;
+    maxMp?: number;
+    attack?: number;
+    defense?: number;
+    xp?: number;
+    xpToNext?: number;
+    gold?: number;
+    inventory?: string[];
+    turnCount?: number;
+    runCount?: number;
+  } | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -135,6 +153,19 @@ export default function Home() {
           setStatus(data.status);
           setErrorMessage(data.errorMessage || null);
           setRefreshTrigger((prev) => prev + 1);
+
+          // Fetch character stats from volume
+          try {
+            const statsRes = await fetch(`/api/conversations/${conversationId}/files/character.json`);
+            if (statsRes.ok) {
+              const statsData = await statsRes.json();
+              if (statsData.content) {
+                setCharacterStats(JSON.parse(statsData.content));
+              }
+            }
+          } catch {
+            // character.json may not exist yet — ignore
+          }
         }
       } catch (error) {
         console.error("Polling error:", error);
@@ -226,6 +257,7 @@ export default function Home() {
     setPendingMessages([]);
     setStatus("idle");
     setErrorMessage(null);
+    setCharacterStats(null);
   };
 
   const isLoading = status === "running" || isSubmitting;
@@ -351,6 +383,55 @@ export default function Home() {
             {hasMessages && (
               <div className="border-t border-border/40 bg-background/80 backdrop-blur-sm p-4">
                 <div className="max-w-3xl mx-auto">
+                  {characterStats && characterStats.name && (
+                    <div className="rpg-status-bar mb-3">
+                      <div className="rpg-status-bar-row">
+                        <span className="rpg-status-name">📊 {characterStats.name}</span>
+                        <span className="rpg-status-tag">Lv.{characterStats.level ?? 1} {characterStats.class ?? ''}</span>
+                        <span className="rpg-status-tag">🔄 T{characterStats.turnCount ?? 0} | 💀 R{characterStats.runCount ?? 1}</span>
+                      </div>
+                      <div className="rpg-status-bar-row rpg-status-bars">
+                        <div className="rpg-bar-group">
+                          <span className="rpg-bar-label">❤️ HP</span>
+                          <div className="rpg-bar-track">
+                            <div
+                              className="rpg-bar-fill rpg-bar-hp"
+                              style={{ width: `${Math.max(0, Math.min(100, ((characterStats.hp ?? 0) / (characterStats.maxHp ?? 100)) * 100))}%` }}
+                            />
+                          </div>
+                          <span className="rpg-bar-value">{characterStats.hp ?? 0}/{characterStats.maxHp ?? 100}</span>
+                        </div>
+                        <div className="rpg-bar-group">
+                          <span className="rpg-bar-label">💧 MP</span>
+                          <div className="rpg-bar-track">
+                            <div
+                              className="rpg-bar-fill rpg-bar-mp"
+                              style={{ width: `${Math.max(0, Math.min(100, ((characterStats.mp ?? 0) / (characterStats.maxMp ?? 50)) * 100))}%` }}
+                            />
+                          </div>
+                          <span className="rpg-bar-value">{characterStats.mp ?? 0}/{characterStats.maxMp ?? 50}</span>
+                        </div>
+                        <div className="rpg-bar-group">
+                          <span className="rpg-bar-label">✨ XP</span>
+                          <div className="rpg-bar-track">
+                            <div
+                              className="rpg-bar-fill rpg-bar-xp"
+                              style={{ width: `${Math.max(0, Math.min(100, ((characterStats.xp ?? 0) / (characterStats.xpToNext ?? 100)) * 100))}%` }}
+                            />
+                          </div>
+                          <span className="rpg-bar-value">{characterStats.xp ?? 0}/{characterStats.xpToNext ?? 100}</span>
+                        </div>
+                      </div>
+                      <div className="rpg-status-bar-row rpg-status-stats">
+                        <span>⚔️ ATK {characterStats.attack ?? 10}</span>
+                        <span>🛡️ DEF {characterStats.defense ?? 5}</span>
+                        <span>💰 {characterStats.gold ?? 0}G</span>
+                        {characterStats.inventory && characterStats.inventory.length > 0 && (
+                          <span className="rpg-status-inv">🎒 {characterStats.inventory.join(', ')}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <PromptForm
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
