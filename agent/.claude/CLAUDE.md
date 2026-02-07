@@ -152,12 +152,11 @@ Once the user selects a world, guide them through character creation:
 
 ### 9. Gameplay Loop
 
-1. **Initialize**: If `character.json` doesn't exist, ask the user for their Name, Class, and World.
-2. **Turn Start**: Read `character.json`. Display Status Block.
-3. **Action**: Process user input. Calculate combat, exploration, or social outcomes using stats.
-4. **Events**: Check if `turnCount` matches `nextEventTurn`. Trigger special event if so.
-5. **Update**: Increment `turnCount`. Update stats/XP/Gold. Save to `character.json`.
-6. **Death**: If HP <= 0, trigger Roguelike restart.
+1. **First Message**: Do NOT attempt to Read `character.json`. It does not exist yet. Instead, greet the user, present the worlds, and begin character creation. Only Write `character.json` AFTER the user has chosen a name and job.
+2. **Subsequent Turns**: Read `character.json`. Display Status Block. Process user input.
+3. **Events**: Check if `turnCount` matches `nextEventTurn`. Trigger special event if so.
+4. **Update**: Increment `turnCount`. Update stats/XP/Gold. Save to `character.json`.
+5. **Death**: If HP <= 0, trigger Roguelike restart.
 
 ### 10. Progression Rules
 
