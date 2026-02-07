@@ -91,7 +91,6 @@ export default function Home() {
   // Track post-completion poll attempts to avoid infinite polling
   const postCompletionPollsRef = useRef(0);
 
-  // Extract text from a user message content (handles both string and ContentBlock[]).
   const getUserMessageText = useCallback((content: string | unknown[]): string => {
     if (typeof content === "string") return content;
     if (Array.isArray(content)) {
@@ -101,6 +100,52 @@ export default function Home() {
         .join("\n");
     }
     return "";
+  }, []);
+
+  const parseStatsFromMessages = useCallback((msgs: SessionEntry[]) => {
+    for (let i = msgs.length - 1; i >= 0; i--) {
+      const m = msgs[i];
+      if (m.type !== "assistant") continue;
+      const text = typeof m.message.content === "string"
+        ? m.message.content
+        : Array.isArray(m.message.content)
+          ? m.message.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("\n")
+          : "";
+      if (!text.includes("📊")) continue;
+
+      const nameMatch = text.match(/📊\s*(.+?)\s*\|\s*Lv\.(\d+)\s+(.+?)\s*\|\s*🌍\s*(.+)/);
+      const hpMatch = text.match(/❤️\s*HP:\s*(\d+)\/(\d+)/);
+      const mpMatch = text.match(/💧\s*MP:\s*(\d+)\/(\d+)/);
+      const atkMatch = text.match(/⚔️\s*ATK:\s*(\d+)/);
+      const defMatch = text.match(/🛡️\s*DEF:\s*(\d+)/);
+      const goldMatch = text.match(/💰\s*(?:GOLD:\s*)?(\d+)/);
+      const xpMatch = text.match(/✨\s*XP:\s*(\d+)\/(\d+)/);
+      const invMatch = text.match(/🎒\s*INV:\s*\[?([^\]\n]*)\]?/);
+      const turnMatch = text.match(/🔄\s*TURN:\s*(\d+)/);
+      const runMatch = text.match(/💀\s*RUN:\s*(\d+)/);
+
+      if (nameMatch && hpMatch) {
+        setCharacterStats({
+          name: nameMatch[1].trim(),
+          level: parseInt(nameMatch[2]),
+          class: nameMatch[3].trim(),
+          world: nameMatch[4].trim(),
+          hp: parseInt(hpMatch[1]),
+          maxHp: parseInt(hpMatch[2]),
+          mp: mpMatch ? parseInt(mpMatch[1]) : 0,
+          maxMp: mpMatch ? parseInt(mpMatch[2]) : 50,
+          attack: atkMatch ? parseInt(atkMatch[1]) : 10,
+          defense: defMatch ? parseInt(defMatch[1]) : 5,
+          gold: goldMatch ? parseInt(goldMatch[1]) : 0,
+          xp: xpMatch ? parseInt(xpMatch[1]) : 0,
+          xpToNext: xpMatch ? parseInt(xpMatch[2]) : 100,
+          inventory: invMatch ? invMatch[1].split(',').map((s: string) => s.trim()).filter(Boolean) : [],
+          turnCount: turnMatch ? parseInt(turnMatch[1]) : 0,
+          runCount: runMatch ? parseInt(runMatch[1]) : 1,
+        });
+        return;
+      }
+    }
   }, []);
 
   // Check if a pending message has a matching user message in server data.
@@ -154,18 +199,8 @@ export default function Home() {
           setErrorMessage(data.errorMessage || null);
           setRefreshTrigger((prev) => prev + 1);
 
-          if (data.messages.length > 1) {
-            try {
-              const statsRes = await fetch(`/api/conversations/${conversationId}/files/character.json`);
-              if (statsRes.ok) {
-                const statsData = await statsRes.json();
-                if (statsData.content) {
-                  setCharacterStats(JSON.parse(statsData.content));
-                }
-              }
-            } catch {
-              // character.json may not exist yet
-            }
+          if (data.messages.length > 0) {
+            parseStatsFromMessages(data.messages);
           }
         }
       } catch (error) {
