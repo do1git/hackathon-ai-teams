@@ -31,26 +31,26 @@ const LANGUAGES = [
 const WORLDS = [
   {
     icon: "🗡️",
-    title: "무림",
-    desc: "강호의 세계, 무공과 협객의 이야기",
+    title: "강호에 미친놈이 나타났다",
+    desc: "무공, 협객, 그리고 막장 사이다 강호 활극",
     theme: "moorim" as Theme,
   },
   {
     icon: "🚀",
-    title: "갤럭틱 오디세이",
-    desc: "은하 제국과 자유연합의 전쟁",
+    title: "은하 끝에서 살아남기",
+    desc: "우주 생존, 한 치 앞도 모르는 성간 서바이벌",
     theme: "galactic" as Theme,
   },
   {
     icon: "🪄",
-    title: "아케인 아칸",
-    desc: "마법 학교와 금지된 마법의 비밀",
+    title: "최하급 마법사의 역습",
+    desc: "바닥에서 시작하는 언더독 마법 성장기",
     theme: "arcane" as Theme,
   },
   {
-    icon: "💍",
-    title: "고대 반지의 연대기",
-    desc: "종족 연합과 어둠의 군주",
+    icon: "💻",
+    title: "퇴사한 개발자, 이세계 왕국을 리팩토링하다",
+    desc: "코드 리뷰 대신 왕국 리뷰, 개발자 이세계 전직물",
     theme: "fantasy" as Theme,
   }
 ];
