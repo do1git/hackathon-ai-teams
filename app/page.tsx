@@ -154,17 +154,18 @@ export default function Home() {
           setErrorMessage(data.errorMessage || null);
           setRefreshTrigger((prev) => prev + 1);
 
-          // Fetch character stats from volume
-          try {
-            const statsRes = await fetch(`/api/conversations/${conversationId}/files/character.json`);
-            if (statsRes.ok) {
-              const statsData = await statsRes.json();
-              if (statsData.content) {
-                setCharacterStats(JSON.parse(statsData.content));
+          if (data.messages.length > 1) {
+            try {
+              const statsRes = await fetch(`/api/conversations/${conversationId}/files/character.json`);
+              if (statsRes.ok) {
+                const statsData = await statsRes.json();
+                if (statsData.content) {
+                  setCharacterStats(JSON.parse(statsData.content));
+                }
               }
+            } catch {
+              // character.json may not exist yet
             }
-          } catch {
-            // character.json may not exist yet — ignore
           }
         }
       } catch (error) {
@@ -192,9 +193,24 @@ export default function Home() {
     })),
   ];
 
-  // Scroll to bottom when messages change
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const userScrolledUpRef = useRef(false);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+      userScrolledUpRef.current = distanceFromBottom > 100;
+    };
+    container.addEventListener('scroll', onScroll);
+    return () => container.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!userScrolledUpRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [serverMessages, pendingMessages]);
 
   const handleSubmit = useCallback(
@@ -315,7 +331,7 @@ export default function Home() {
         <ResizablePanel defaultSize={showWorkspace ? 55 : 100} minSize={40}>
           <div className="flex h-full flex-col relative">
             {/* Messages area */}
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto" ref={scrollContainerRef}>
               {!hasMessages ? (
                 <div className="flex min-h-full flex-col items-center justify-center px-4 py-10 animate-fade-in-up">
                   <div className="text-center mb-12 space-y-4">
