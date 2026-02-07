@@ -144,7 +144,7 @@ Task 6: Final push
 
 ## TODOs
 
-- [ ] 0. Commit & Push Existing UI Changes
+- [x] 0. Commit & Push Existing UI Changes
 
   **What to do**:
   - `git add app/page.tsx app/layout.tsx app/globals.css` (기존 RPG UI 변경분)
@@ -187,7 +187,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 1. Rewrite CLAUDE.md — 풍부한 RPG 시스템 + 세계관 상세화
+- [x] 1. Rewrite CLAUDE.md — 풍부한 RPG 시스템 + 세계관 상세화
 
   **What to do**:
 
@@ -503,7 +503,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 2. Template Rebuild
+- [x] 2. Template Rebuild
 
   **What to do**:
   - `pnpm build:template` 실행
@@ -554,7 +554,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 3. Push to Main & Verify Deployment
+- [x] 3. Push to Main & Verify Deployment
 
   **What to do**:
   - Task 1의 커밋을 `git push origin main`
@@ -605,7 +605,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 4. Playwright E2E Game Test
+- [x] 4. Playwright E2E Game Test
 
   **What to do**:
   - 배포된 사이트에서 실제 게임 플레이 테스트
@@ -698,7 +698,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 5. Bug Fix & Polish
+- [x] 5. Bug Fix & Polish
 
   **What to do**:
   - Task 4 테스트 결과에서 발견된 문제 수정
@@ -756,7 +756,7 @@ Task 6: Final push
 
 ---
 
-- [ ] 6. Final Push & Verify
+- [x] 6. Final Push & Verify
 
   **What to do**:
   - 모든 변경사항이 커밋되었는지 확인
